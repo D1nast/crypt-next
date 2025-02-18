@@ -4,8 +4,8 @@ import { useState,useEffect } from "react";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+// import VisibilityIcon from "@mui/icons-material/Visibility";
+// import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 // Amplifyとの接続関係
 import type { Schema } from '../../amplify/data/resource'
 import { generateClient } from 'aws-amplify/data'
@@ -20,7 +20,7 @@ export default function SignUp(){
     // const [passwordType,setPasswordType] = useState("password");
     const [user,setUsers] = useState<Schema["User"]["type"][]>([]);
     const fetchUsers = async () => {
-        const { data: items, errors } = await client.models.User.list();
+        const { data: items } = await client.models.User.list();
         setUsers(items);
     };
     const createUser = async (input:string) => {
@@ -66,7 +66,7 @@ export default function SignUp(){
             {/* 各ボタン説明 */}
             <Box sx={{marginTop:'50px',display:'flex',flexDirection:'column',alignItems:'center'}}>
                 <Typography sx={{marginBottom:"20px",color:'#FFFFFF'}}>Subscribe : Register your email address</Typography>
-                <Typography sx={{marginBottom:"20px",color:'#FFFFFF'}}>Stop / resume : Stop delivering email. If you've already stopped,resume delivering.</Typography>
+                <Typography sx={{marginBottom:"20px",color:'#FFFFFF'}}>Stop / resume : Stop delivering email. If you&apos;ve already stopped,resume delivering.</Typography>
                 <Typography sx={{marginBottom:"20px",color:'#FFFFFF'}}>Delete : Delete your email address</Typography>
             </Box>
         </Box> 
