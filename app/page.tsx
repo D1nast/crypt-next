@@ -9,6 +9,7 @@ async function fetchRanking() {
   try {
     const req = await fetch("https://api.coincap.io/v2/assets?limit=30");
     const res = await req.json();
+    console.log(res.data);
     return res.data || [];
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -21,6 +22,7 @@ async function fetchNews(){
     try{ 
         const req = await fetch(`${process.env.NEWS_API_URL}?q=bitcoin&language=en&pageSize=25&sortBy=poularity&apiKey=${process.env.NEWS_API_KEY}`);
         const res = await req.json();
+        console.log(res.articles);
         return res.articles || [];
     }  
     catch (error){
