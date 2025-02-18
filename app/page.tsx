@@ -1,95 +1,42 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import NewsAPI from "./component/NewsApi";
+import Ranking from "./component/Ranking";
+import { Amplify } from 'aws-amplify';
+import outputs from '../amplify_outputs.json'; // amplify_outputs.json のパスを確認
+Amplify.configure(outputs); // Amplifyの設定を行う
 
-export default function Home() {
+// ランキングを取得
+async function fetchRanking() {
+  try {
+    const req = await fetch("https://api.coincap.io/v2/assets?limit=30");
+    const res = await req.json();
+    return res.data || [];
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return [];
+  }
+}
+
+// ニュースを取得
+async function fetchNews(){
+    try{ 
+        const req = await fetch(`${process.env.NEWS_API_URL}?q=bitcoin&language=en&pageSize=25&sortBy=poularity&apiKey=${process.env.NEWS_API_KEY}`);
+        const res = await req.json();
+        return res.articles || [];
+    }  
+    catch (error){
+        console.log("Error fetching data:",error);
+        return [];
+    }
+}
+
+export default async function LP() {
+  const ranking = await fetchRanking();
+  const news = await fetchNews();
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      <NewsAPI data={news}/>
+      <Ranking data={ranking} />
+    </>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
   );
 }
